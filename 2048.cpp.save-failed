@@ -1,0 +1,160 @@
+#include<iostream>
+#include<cmath>
+#include<cstdio>
+#include<queue>
+#include<cstring>
+#include<random>
+#include<ctime>
+#define randomInt(a,b) (rand()%(b-a+1)+a)
+#include <conio.h>
+#include <ctime>
+#define inf 0x3f3f3f3f
+using namespace std;
+const int N = 500;
+int nn = 4;
+int a;
+int score = 0;
+int m[10][10];
+queue<int> q;
+struct node{
+    int x, y;
+}p[100];
+
+void show(){
+    for(int i = 0;i < nn;i++){
+        for(int j = 0;j < nn;j++){
+            if(m[i][j]==0)
+                printf(" |");
+            else
+                printf("%d |", m[i][j]);
+        }
+        printf("\n--------\n");
+    }
+}
+
+void ask(){
+    printf("欢迎来到简单的2048！按F5开始游戏\n");
+    int ch = 0;
+    while(true){
+        int t = _getch();
+        if (_kbhit()){//如果有按键按下，则_kbhit()函数返回真
+            ch = _getch();//使用_getch()获取按下的键值
+        }
+        if(ch==63){
+            system("cls");
+            return;
+        }
+    }
+}
+
+void init(){
+    srand((unsigned)time(NULL));
+    int t = randomInt(0,15);
+    for(int i = 0;i < nn;i++)
+        for(int j = 0;j < nn;j++)
+            m[i][j] = 0;
+    m[t/4][t%4] = 2;
+    show();
+}
+
+bool finish(){
+    for(int i=0;i<nn;i++)
+        for(int j=0;j<nn;j++)
+            if(m[i][j]==0)
+                return false;
+    return true;
+}
+
+bool mov(){
+    if(a==6){
+        for(int j=0;j<nn;j++){
+            int t = 0;
+            for(int i=0;i<nn;i++){
+                if(m[i][j]==0)
+                    continue;
+                if(m[i][j]!=t){
+                    if(m[i][j]!=0)
+                        q.push(t);
+                    t = m[i][j];
+                    m[i][j] = 0;
+                }
+                else{
+                    t = m[i][j]*2;
+                    score+=t;
+                    q.push(t);
+                    t = 0;
+                    m[i][j] = 0;
+                }
+            }
+            if(t!=0)
+                q.push(t)
+            int i=0;
+            while(!q.empty()){
+                m[i][j] = q.front();
+                q.pop();
+                i++;
+            }
+        }
+    }
+    if(a==4){
+
+    }
+    if(a==8){
+
+    }
+    if(a==2){
+
+    }
+    int cnt = -1;
+    for(int i=0;i<nn;i++)
+        for(int j=0;j<nn;j++)
+            if(m[i][j]==0)
+                p[++cnt].x = i, p[cnt].y = j;
+    int pos = randomInt(0, cnt);
+    m[p[pos].x][p[pos].y] = 2;
+    system("cls");
+    show();
+    printf("你的得分是%d\n", score);
+    if(finish()){
+        printf("你死了！你的最终得分是%d\n", score);
+        score = 0;
+        system("pause");
+        return true;
+    }
+    else
+        return false;
+}
+
+void play(){
+    int ch;
+	while(true){
+        while(true){
+            int t = _getch();
+            if (_kbhit()){//如果有按键按下，则_kbhit()函数返回真
+                ch = _getch();//使用_getch()获取按下的键值
+                break;
+            }
+        }
+        switch(ch){
+        case 72:a = 6;break;
+        case 80:a = 4;break;
+        case 75:a = 2;break;
+        case 77:a = 8;break;
+        default: break;
+        }
+        bool f = mov();
+        if(f){
+            system("cls");
+            break;
+        }
+	}
+}
+
+int main(){
+    while(true){
+        ask();
+        init();
+        play();
+    }
+    return 0;
+}
